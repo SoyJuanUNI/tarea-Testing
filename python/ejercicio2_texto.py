@@ -130,13 +130,15 @@ def eliminar_espacios_extra(texto):
 
 def contar_caracteres_unicos(texto):
     """
-    Cuenta el número de caracteres únicos en un texto (case-sensitive).
+    Cuenta el número de caracteres únicos en un texto (case-sensitive),
+    contando cada espacio como carácter independiente.
     
     Args:
         texto (str): El texto a analizar
     
     Returns:
-        int: El número de caracteres únicos
+        int: La cuenta combinada de caracteres únicos (excluyendo espacios) más
+             el número de espacios individuales presentes en el texto
     
     Raises:
         TypeError: Si el parámetro no es una cadena
@@ -144,4 +146,6 @@ def contar_caracteres_unicos(texto):
     if not isinstance(texto, str):
         raise TypeError("El parámetro debe ser una cadena de texto")
     
-    return len(set(texto))
+    caracteres_sin_espacio = {c for c in texto if c != ' '}
+    num_espacios = texto.count(' ')
+    return len(caracteres_sin_espacio) + num_espacios
