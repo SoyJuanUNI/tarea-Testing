@@ -1,18 +1,25 @@
 """
 Pruebas unitarias para el módulo de Geometría
 
-Estas pruebas verifican el correcto funcionamiento de las funciones
-para calcular áreas y perímetros de figuras geométricas.
+Estas pruebas verifican el correcto funcionamiento de las clases POO
+y funciones de compatibilidad para calcular áreas y perímetros de figuras geométricas.
 """
 
 import pytest
 import math
 from ejercicio1_geometria import (
+    # Funciones de compatibilidad
     area_rectangulo,
     area_circulo,
     area_triangulo,
     perimetro_rectangulo,
-    perimetro_circulo
+    perimetro_circulo,
+    # Clases POO
+    FiguraGeometrica,
+    Rectangulo,
+    Circulo,
+    Triangulo,
+    TrianguloCompleto
 )
 
 
@@ -154,3 +161,204 @@ class TestPerimetroCirculo:
         """Debe lanzar ValueError con radio negativo"""
         with pytest.raises(ValueError):
             perimetro_circulo(-5)
+
+
+# ============================================================================
+# PRUEBAS PARA CLASES POO
+# ============================================================================
+
+class TestFiguraGeometrica:
+    """Pruebas para la clase abstracta FiguraGeometrica"""
+    
+    def test_figura_geometrica_no_instanciable(self):
+        """No se debe poder instanciar FiguraGeometrica directamente"""
+        with pytest.raises(TypeError):
+            FiguraGeometrica()
+
+
+class TestRectanguloPOO:
+    """Pruebas para la clase Rectangulo"""
+    
+    def test_rectangulo_creacion(self):
+        """Debe crear un rectángulo correctamente"""
+        rect = Rectangulo(5, 3)
+        assert rect.base == 5
+        assert rect.altura == 3
+    
+    def test_rectangulo_area(self):
+        """Debe calcular el área correctamente"""
+        rect = Rectangulo(5, 3)
+        assert rect.calcular_area() == 15
+    
+    def test_rectangulo_perimetro(self):
+        """Debe calcular el perímetro correctamente"""
+        rect = Rectangulo(5, 3)
+        assert rect.calcular_perimetro() == 16
+    
+    def test_rectangulo_str(self):
+        """Debe tener representación en cadena correcta"""
+        rect = Rectangulo(5, 3)
+        assert str(rect) == "Rectángulo(base=5, altura=3)"
+    
+    def test_rectangulo_validacion_tipo(self):
+        """Debe validar tipos de parámetros"""
+        with pytest.raises(TypeError):
+            Rectangulo("5", 3)
+        with pytest.raises(TypeError):
+            Rectangulo(5, "3")
+    
+    def test_rectangulo_validacion_negativo(self):
+        """Debe validar valores negativos"""
+        with pytest.raises(ValueError):
+            Rectangulo(-5, 3)
+        with pytest.raises(ValueError):
+            Rectangulo(5, -3)
+
+
+class TestCirculoPOO:
+    """Pruebas para la clase Circulo"""
+    
+    def test_circulo_creacion(self):
+        """Debe crear un círculo correctamente"""
+        circ = Circulo(5)
+        assert circ.radio == 5
+    
+    def test_circulo_area(self):
+        """Debe calcular el área correctamente"""
+        circ = Circulo(5)
+        esperado = math.pi * 25
+        assert abs(circ.calcular_area() - esperado) < 0.0001
+    
+    def test_circulo_perimetro(self):
+        """Debe calcular el perímetro correctamente"""
+        circ = Circulo(5)
+        esperado = 2 * math.pi * 5
+        assert abs(circ.calcular_perimetro() - esperado) < 0.0001
+    
+    def test_circulo_str(self):
+        """Debe tener representación en cadena correcta"""
+        circ = Circulo(5)
+        assert str(circ) == "Círculo(radio=5)"
+    
+    def test_circulo_validacion_tipo(self):
+        """Debe validar tipos de parámetros"""
+        with pytest.raises(TypeError):
+            Circulo("5")
+    
+    def test_circulo_validacion_negativo(self):
+        """Debe validar valores negativos"""
+        with pytest.raises(ValueError):
+            Circulo(-5)
+
+
+class TestTrianguloPOO:
+    """Pruebas para la clase Triangulo"""
+    
+    def test_triangulo_creacion(self):
+        """Debe crear un triángulo correctamente"""
+        tri = Triangulo(6, 4)
+        assert tri.base == 6
+        assert tri.altura == 4
+    
+    def test_triangulo_area(self):
+        """Debe calcular el área correctamente"""
+        tri = Triangulo(6, 4)
+        assert tri.calcular_area() == 12
+    
+    def test_triangulo_perimetro_no_implementado(self):
+        """Debe lanzar NotImplementedError para perímetro"""
+        tri = Triangulo(6, 4)
+        with pytest.raises(NotImplementedError):
+            tri.calcular_perimetro()
+    
+    def test_triangulo_str(self):
+        """Debe tener representación en cadena correcta"""
+        tri = Triangulo(6, 4)
+        assert str(tri) == "Triángulo(base=6, altura=4)"
+    
+    def test_triangulo_validacion_tipo(self):
+        """Debe validar tipos de parámetros"""
+        with pytest.raises(TypeError):
+            Triangulo("6", 4)
+        with pytest.raises(TypeError):
+            Triangulo(6, "4")
+    
+    def test_triangulo_validacion_negativo(self):
+        """Debe validar valores negativos"""
+        with pytest.raises(ValueError):
+            Triangulo(-6, 4)
+        with pytest.raises(ValueError):
+            Triangulo(6, -4)
+
+
+class TestTrianguloCompletoPOO:
+    """Pruebas para la clase TrianguloCompleto"""
+    
+    def test_triangulo_completo_creacion(self):
+        """Debe crear un triángulo completo correctamente"""
+        tri = TrianguloCompleto(6, 4, 5, 7)
+        assert tri.base == 6
+        assert tri.altura == 4
+        assert tri.lado1 == 5
+        assert tri.lado2 == 7
+    
+    def test_triangulo_completo_area(self):
+        """Debe calcular el área correctamente"""
+        tri = TrianguloCompleto(6, 4, 5, 7)
+        assert tri.calcular_area() == 12
+    
+    def test_triangulo_completo_perimetro(self):
+        """Debe calcular el perímetro correctamente"""
+        tri = TrianguloCompleto(6, 4, 5, 7)
+        assert tri.calcular_perimetro() == 18  # 6 + 5 + 7
+    
+    def test_triangulo_completo_str(self):
+        """Debe tener representación en cadena correcta"""
+        tri = TrianguloCompleto(6, 4, 5, 7)
+        assert str(tri) == "TriánguloCompleto(base=6, altura=4, lado1=5, lado2=7)"
+    
+    def test_triangulo_completo_validacion_tipo(self):
+        """Debe validar tipos de parámetros"""
+        with pytest.raises(TypeError):
+            TrianguloCompleto("6", 4, 5, 7)
+        with pytest.raises(TypeError):
+            TrianguloCompleto(6, 4, "5", 7)
+    
+    def test_triangulo_completo_validacion_negativo(self):
+        """Debe validar valores negativos"""
+        with pytest.raises(ValueError):
+            TrianguloCompleto(-6, 4, 5, 7)
+        with pytest.raises(ValueError):
+            TrianguloCompleto(6, 4, -5, 7)
+
+
+class TestPolimorfismo:
+    """Pruebas para demostrar polimorfismo con las clases"""
+    
+    def test_polimorfismo_calcular_area(self):
+        """Debe poder calcular área de diferentes figuras polimórficamente"""
+        figuras = [
+            Rectangulo(5, 3),
+            Circulo(2),
+            Triangulo(6, 4)
+        ]
+        
+        areas = [fig.calcular_area() for fig in figuras]
+        
+        assert areas[0] == 15  # Rectángulo
+        assert abs(areas[1] - math.pi * 4) < 0.0001  # Círculo
+        assert areas[2] == 12  # Triángulo
+    
+    def test_polimorfismo_calcular_perimetro(self):
+        """Debe poder calcular perímetro de figuras que lo soporten"""
+        figuras = [
+            Rectangulo(5, 3),
+            Circulo(2),
+            TrianguloCompleto(6, 4, 5, 7)
+        ]
+        
+        perimetros = [fig.calcular_perimetro() for fig in figuras]
+        
+        assert perimetros[0] == 16  # Rectángulo
+        assert abs(perimetros[1] - 2 * math.pi * 2) < 0.0001  # Círculo
+        assert perimetros[2] == 18  # TriánguloCompleto
